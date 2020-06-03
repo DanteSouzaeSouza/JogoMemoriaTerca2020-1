@@ -12,6 +12,12 @@ namespace JogoMemoriaTerca2020_1
 {
     public partial class FrmMemoria : Form
     {
+        // criando variáveis para armazenar os cliques
+        private Label primeiroClique = null;
+        private Label segundoClique = null;
+
+
+
         // adicionando código que gerará os
         // elementos do tabuleiro de forma aleatória:
         // instanciando um objeto Random
@@ -52,6 +58,33 @@ namespace JogoMemoriaTerca2020_1
                 }
             }
         }
+
+        // função que checa se o jogo acabou e alguem ganhou
+        private void checaGanhador()
+        {
+            // checar por ícones que não combinam
+            foreach (var controle in tlpTabuleiro.Controls)
+            {
+                Label icone = controle as Label;
+
+                // se o ícone for diferente de nulo:
+                if (icone != null)
+                {
+                    // checando se as cores de frente e de fundo batem
+                    if (icone.ForeColor == icone.BackColor)
+                    {
+                        // para tudo
+                        return;
+                    }
+                }
+            }
+            // mostrando janela ao vencedor:
+            MessageBox.Show("Você acertou todas!", "Parabéns!!");
+            Close();
+
+        }
+
+
         public FrmMemoria()
         {
             InitializeComponent();
@@ -72,9 +105,52 @@ namespace JogoMemoriaTerca2020_1
                     // a cor do ícone é preta,  não fazer nada
                     return;
                 }
-                // caso ele esteja invisivel, atribuir cor preta
-                iconeClicado.ForeColor = Color.Black;
+                // checando se é o primeiro clique do jogador
+                if (primeiroClique == null)
+                {
+                    // se for, joga iconeclicado dentro do primeiroclique
+                    primeiroClique = iconeClicado;
+                    // caso ele esteja invisivel, atribuir cor preta
+                    primeiroClique.ForeColor = Color.Black;
+                    // sair do método se for o primeiro clique:
+                    return;
+                }
+                // se o jogador chegou até essa parte do código
+                // é porque ele está clicando uma segunda vez
+                segundoClique = iconeClicado;
+                segundoClique.ForeColor = Color.Black;
+
+                // checando se o jogo acabou
+                checaGanhador();
+
+
+                // checando se as dois icones clicados são iguais:
+                if (primeiroClique.Text == segundoClique.Text)
+                {
+                    primeiroClique = null;
+                    segundoClique = null;
+                    return;
+                }
+
+                // iniciar a contagem do timer:
+                timer1.Start();
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            // parar o timer se ele estiver rodando:
+            timer1.Stop();
+
+            // esconder os dois ícones
+
+            primeiroClique.ForeColor = primeiroClique.BackColor;
+            segundoClique.ForeColor = segundoClique.BackColor;
+
+            // resetar as variáveis que computam os cliques:
+            primeiroClique = null;
+            segundoClique = null;
+
         }
     }
 }
