@@ -14,7 +14,6 @@ namespace JogoMemoriaTerca2020_1
     {
         // adicionando código que gerará os
         // elementos do tabuleiro de forma aleatória:
-
         // instanciando um objeto Random
         Random random = new Random();
 
@@ -26,7 +25,7 @@ namespace JogoMemoriaTerca2020_1
         };
 
         // método que adiciona icones de forma aleatória ao tabuleiro
-        private void AdcionaIconesQuadrados()
+        private void AdicionaIconesQuadrados()
         {
             // nosso painel tem 16 casas
             // e a lista 16 elementos (8 pares)
@@ -46,18 +45,36 @@ namespace JogoMemoriaTerca2020_1
                     // alterar o texto de uma label usando o
                     // caractere de acordo com o índice obtido acima
                     icone.Text = icones[numeroAleatorio];
+                    // pintar o ícone adicionado com a mesma cor do fundo
+                    icone.ForeColor = icone.BackColor;
                     // removendo da lista o ícone usado acima:
                     icones.RemoveAt(numeroAleatorio);
                 }
             }
         }
-
         public FrmMemoria()
         {
             InitializeComponent();
-            AdcionaIconesQuadrados();// chamando o método para criar o tabuleiro
+            AdicionaIconesQuadrados();// chamando o método para criar o tabuleiro
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+            // usando o sender para captar o icone clicado
+            Label iconeClicado = sender as Label;
 
+            // checar se uma label foi realmente clicada
+            if (iconeClicado != null)
+            {
+                // checando a cor atual do ícone clicado
+                if (iconeClicado.ForeColor == Color.Black)
+                {
+                    // a cor do ícone é preta,  não fazer nada
+                    return;
+                }
+                // caso ele esteja invisivel, atribuir cor preta
+                iconeClicado.ForeColor = Color.Black;
+            }
+        }
     }
 }
