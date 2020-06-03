@@ -1,34 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace JogoMemoriaTerca2020_1
 {
     public partial class FrmMemoria : Form
     {
+        // criando a lista de ícone
+        private readonly List<string> icones = new List<string>
+        {
+            // criando os pares de elementos a irem para o tabuleiro
+            "!", "!", "N", "N", ",", ",", "k", "k",
+            "b", "b", "v", "v", "H", "H", "z", "z"
+        };
+
         // criando variáveis para armazenar os cliques
-        private Label primeiroClique = null;
-        private Label segundoClique = null;
-
-
+        private Label primeiroClique;
+        private Label segundoClique;
 
         // adicionando código que gerará os
         // elementos do tabuleiro de forma aleatória:
         // instanciando um objeto Random
-        Random random = new Random();
+        private readonly Random random = new Random();
 
-        // criando a lista de ícone
-        private List<string> icones = new List<string>()
-        {  // criando os pares de elementos a irem para o tabuleiro
-            "!", "!", "N", "N", ",", ",", "k", "k",
-            "b", "b", "v", "v", "H", "H", "z", "z"
-        };
+        public FrmMemoria()
+        {
+            InitializeComponent();
+            AdicionaIconesQuadrados(); // chamando o método para criar o tabuleiro
+        }
 
         // método que adiciona icones de forma aleatória ao tabuleiro
         private void AdicionaIconesQuadrados()
@@ -37,17 +37,17 @@ namespace JogoMemoriaTerca2020_1
             // e a lista 16 elementos (8 pares)
             // ler a lista e adicionar o ícone ao tabuleiro
             // para cada controle ou elemento (labels) dentro do tlpTabuleiro
-            foreach (Control controle in tlpTabuleiro.Controls)
+            foreach (var controle in tlpTabuleiro.Controls)
             {
                 // executar:
                 // ligando o ícone com uma das labels do formulário
-                Label icone = controle as Label;
+                var icone = controle as Label;
                 // se o ícone não está vazio, executar:
                 if (icone != null)
                 {
                     // recebendo o índice de algum dos ícones da Lista
                     // de ícones de forma aleatoria
-                    int numeroAleatorio = random.Next(icones.Count);
+                    var numeroAleatorio = random.Next(icones.Count);
                     // alterar o texto de uma label usando o
                     // caractere de acordo com o índice obtido acima
                     icone.Text = icones[numeroAleatorio];
@@ -65,46 +65,33 @@ namespace JogoMemoriaTerca2020_1
             // checar por ícones que não combinam
             foreach (var controle in tlpTabuleiro.Controls)
             {
-                Label icone = controle as Label;
+                var icone = controle as Label;
 
                 // se o ícone for diferente de nulo:
                 if (icone != null)
-                {
                     // checando se as cores de frente e de fundo batem
                     if (icone.ForeColor == icone.BackColor)
-                    {
                         // para tudo
                         return;
-                    }
-                }
             }
+
             // mostrando janela ao vencedor:
             MessageBox.Show("Você acertou todas!", "Parabéns!!");
             Close();
-
-        }
-
-
-        public FrmMemoria()
-        {
-            InitializeComponent();
-            AdicionaIconesQuadrados();// chamando o método para criar o tabuleiro
         }
 
         private void label1_Click(object sender, EventArgs e)
         {
             // usando o sender para captar o icone clicado
-            Label iconeClicado = sender as Label;
+            var iconeClicado = sender as Label;
 
             // checar se uma label foi realmente clicada
             if (iconeClicado != null)
             {
                 // checando a cor atual do ícone clicado
                 if (iconeClicado.ForeColor == Color.Black)
-                {
                     // a cor do ícone é preta,  não fazer nada
                     return;
-                }
                 // checando se é o primeiro clique do jogador
                 if (primeiroClique == null)
                 {
@@ -115,6 +102,7 @@ namespace JogoMemoriaTerca2020_1
                     // sair do método se for o primeiro clique:
                     return;
                 }
+
                 // se o jogador chegou até essa parte do código
                 // é porque ele está clicando uma segunda vez
                 segundoClique = iconeClicado;
@@ -143,14 +131,12 @@ namespace JogoMemoriaTerca2020_1
             timer1.Stop();
 
             // esconder os dois ícones
-
             primeiroClique.ForeColor = primeiroClique.BackColor;
             segundoClique.ForeColor = segundoClique.BackColor;
 
             // resetar as variáveis que computam os cliques:
             primeiroClique = null;
             segundoClique = null;
-
         }
     }
 }
